@@ -28,15 +28,19 @@ class StockDiscussionCrawler(object):
         headers = {"referer": target_url}
         request = requests.get(target_url, headers=headers)
 
+
         bs = BeautifulSoup(request.text, "html.parser")
 
-        table = bs.find("table", {"summary": "게시판 글 본문보기"})
+        content_table = bs.find("table", {"summary": "게시판 글 본문보기"})
 
-        title = table.find("strong").text
-        content = table.find("div", {"id": "body"}).text
-        print("title: ", title)
-        print("content : ", content)
-        print("content split : ", content.split(" "))
+        title = content_table.find("strong").contents
+        content = content_table.find("div", {"id": "body"}).contents
+
+        next_previous_table = bs.find("table", {"summary": "이전, 다음 글 목록"})
+
+        print(next_previous_table)
+        # print("title: ", title)
+        # print("content : ", content)
 
     def get(self):
         discussion_url = self.__get_start_discussion_url()
